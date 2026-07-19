@@ -4,21 +4,44 @@ package com.bicente44.simba.model
  * Initializes a Simba at the start. Source of truth for all constants
  */
 object SimbaDefaults {
+    // Initial Stats
     const val INITIAL_HUNGER = 100
     const val INITIAL_ENERGY = 100
-    const val FEED_HUNGER_GAIN = 20
-    const val PLAY_MAX_USES = 3
-    const val PLAY_COOLDOWN_MINUTES = 15
+    const val INITIAL_CLEANLINESS = 100
+    const val INITIAL_HAPPINESS = 100
+    const val INITIAL_HEALTH = 100
 
-    /*fun newSimba(now: Long): SimbaState = SimbaState(
+    // Max USES till cooldowns
+    const val PLAY_MAX_USES = 3
+    const val SLEEP_MAX_USES = 3
+
+    // OFFLINE
+    const val OFFLINE_THRESHOLD_MINUTES = 15 // How many minutes till offline
+    const val OFFLINE_DECAY_MULTIPLIER = 0.5 // Offline decay is gentler than online
+
+    // DECAY
+    const val HUNGER_DECAY_PER_TICK = 0.15
+    const val ENERGY_DECAY_PER_TICK = 0.2
+    const val CLEAN_DECAY_PER_TICK = 0.15
+    const val HAPPINESS_DECAY_NORMAL = 0.05
+    const val HAPPINESS_DECAY_SEVERE = 0.3
+    const val HEALTH_DECAY_PER_TICK = 0.1
+
+    // COOLDOWN times
+    const val FEED_COOLDOWN_MINUTES: Long = 300000
+    const val PLAY_COOLDOWN_MINUTES: Long = 300000
+    const val SLEEP_COOLDOWN_MINUTES: Long = 300000
+
+    fun newSimba(now: Long): SimbaState = SimbaState(
         hunger = INITIAL_HUNGER,
         energy = INITIAL_ENERGY,
-        // ...
+        cleanliness = INITIAL_CLEANLINESS,
+        happiness = INITIAL_HAPPINESS,
+        health = INITIAL_HEALTH,
         creationTimestamp = now,
         lastSeenTimestamp = now,
-        feedCooldown = ActionCooldown(usesRemaining = Int.MAX_VALUE), // unlimited if you kept feed uncapped, or capped
-        playCooldown = ActionCooldown(usesRemaining = PLAY_MAX_USES),
-        sleepCooldown = ActionCooldown(usesRemaining = SLEEP_MAX_USES)
+        feedCooldown = ActionCooldown(usesRemaining = Int.MAX_VALUE, cooldownEndTimestamp = FEED_COOLDOWN_MINUTES),
+        playCooldown = ActionCooldown(usesRemaining = PLAY_MAX_USES, cooldownEndTimestamp = PLAY_COOLDOWN_MINUTES),
+        sleepCooldown = ActionCooldown(usesRemaining = SLEEP_MAX_USES, cooldownEndTimestamp = SLEEP_COOLDOWN_MINUTES)
     )
-    */
 }
