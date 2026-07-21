@@ -69,6 +69,7 @@ fun applyFeed(state: SimbaState, now: Long, foodGain: Int, energyGain: Int): Sim
 /**
  * When you play with Simba he gains happiness.
  * Happy Simba, happy life
+ * TODO: decay energy (remove energy here), as Simba plays he gets tired
  */
 fun applyPlay(state: SimbaState, now: Long, playGain: Int): SimbaState {
     return state.copy(
@@ -78,6 +79,7 @@ fun applyPlay(state: SimbaState, now: Long, playGain: Int): SimbaState {
 
 /**
  * Simba eepy, sleep = energy
+ * TODO: decay food (remove feed here), as Simba sleeps he gets hungry
  */
 fun applySleep(state: SimbaState, now: Long, sleepGain: Int): SimbaState {
     return state.copy(
