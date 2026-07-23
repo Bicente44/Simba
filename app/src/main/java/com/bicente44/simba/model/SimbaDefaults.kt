@@ -39,6 +39,7 @@ object SimbaDefaults {
         cleanliness = INITIAL_CLEANLINESS,
         happiness = INITIAL_HAPPINESS,
         health = INITIAL_HEALTH,
+        activityState = ActivityState.IDLE,
         creationTimestamp = now,
         lastSeenTimestamp = now,
         feedCooldown = ActionCooldown(usesRemaining = Int.MAX_VALUE, cooldownEndTimestamp = FEED_COOLDOWN_MILLIS),

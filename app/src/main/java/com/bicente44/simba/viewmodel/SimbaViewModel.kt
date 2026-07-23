@@ -40,6 +40,11 @@ class SimbaViewModel () : ViewModel() {
         saveState(decayed)
     }
 
+    /**
+     * Loads Simba's state from memory
+     * TODO: Simba app version, what if were updating major Simba state, cant just clear everything
+     * TODO: Issue is we don't want someone to lose all their Simba age progress for an update.
+     */
     private fun loadState(): SimbaState {
         // read from settings, decode JSON, or fall back to SimbaDefaults.newSimba()
         val save = settings.getStringOrNull("simba_save")
