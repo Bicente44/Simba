@@ -30,7 +30,7 @@ fun StatButton(
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Image(painter = icon, contentDescription = null, modifier = Modifier.size(45.dp))
-            Text(text = "$statValue%")
+            Text(text = "$statValue%", color = Color.Black)
         }
     }
 }

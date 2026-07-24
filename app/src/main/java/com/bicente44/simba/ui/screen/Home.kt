@@ -10,7 +10,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.IconButton
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -62,6 +67,26 @@ fun Home(
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
+
+        // Age + Settings row
+        Row(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = "Age: $age")
+
+            IconButton(onClick = onSettingsClicked) {
+                Image(
+                    painter = painterResource(R.drawable.icon_settings),
+                    contentDescription = "Settings"
+                )
+            }
+        }
+
         // Simba
         Image(
             painter = simbaPainterFor(state.activityState, mood),
@@ -69,13 +94,35 @@ fun Home(
             modifier = Modifier.align(Alignment.Center)
         )
 
-        // Action buttons
+        // Health + Action buttons
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(bottom = 24.dp)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            // Health bar
+            Box (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(24.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                LinearProgressIndicator(
+                    progress = { state.health / 100f },
+                    modifier = Modifier
+                        .fillMaxWidth(0.6f)
+                        .height(24.dp),
+                    color = Color(0xFFFFA332)
+                )
+                Text(
+                    text = "${state.health}%",
+                    color = Color.Black
+                )
+            }
+
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier.padding(12.dp),
@@ -112,19 +159,6 @@ fun Home(
                     enabled = canPerformAnyAction(state, now)
                 )
             }
-        }
-
-        // Layer 4: settings entry point
-        // TODO: make bigger
-        IconButton(
-            onClick = onSettingsClicked,
-            modifier = Modifier.align(Alignment.TopEnd)
-                .padding(12.dp)
-        ) {
-            Image(
-                painter = painterResource(R.drawable.icon_settings),
-                contentDescription = "Settings"
-            )
         }
     }
 }
