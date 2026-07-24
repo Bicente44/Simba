@@ -13,6 +13,8 @@ data class SimbaState (
     val happiness: Int,
     val health: Int,
     val activityState: ActivityState,
+    val activityStartTimestamp: Long,
+    val lastActionTimestamp: Long,
     val creationTimestamp: Long,
     val lastSeenTimestamp: Long,
     val feedCooldown: ActionCooldown,

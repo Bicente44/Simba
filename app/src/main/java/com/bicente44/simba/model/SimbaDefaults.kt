@@ -29,9 +29,11 @@ object SimbaDefaults {
     const val HEALTH_DECAY_PER_TICK = 0.1
 
     // COOLDOWN times
-    const val FEED_COOLDOWN_MILLIS: Long = 300000
-    const val PLAY_COOLDOWN_MILLIS: Long = 300000
-    const val SLEEP_COOLDOWN_MILLIS: Long = 300000
+    const val ACTIVITY_DURATION_MILLIS: Long = 3000L    // 3 seconds
+    const val ACTION_CLICK_COOLDOWN_MILLIS: Long = 2000L// 2 seconds
+    const val FEED_COOLDOWN_MILLIS: Long = 60000        // 1 minute
+    const val PLAY_COOLDOWN_MILLIS: Long = 60000
+    const val SLEEP_COOLDOWN_MILLIS: Long = 60000
 
     fun newSimba(now: Long): SimbaState = SimbaState(
         hunger = INITIAL_HUNGER,
@@ -40,11 +42,13 @@ object SimbaDefaults {
         happiness = INITIAL_HAPPINESS,
         health = INITIAL_HEALTH,
         activityState = ActivityState.IDLE,
+        activityStartTimestamp = now,
+        lastActionTimestamp = now,
         creationTimestamp = now,
         lastSeenTimestamp = now,
-        feedCooldown = ActionCooldown(usesRemaining = Int.MAX_VALUE, cooldownEndTimestamp = FEED_COOLDOWN_MILLIS),
-        playCooldown = ActionCooldown(usesRemaining = PLAY_MAX_USES, cooldownEndTimestamp = PLAY_COOLDOWN_MILLIS),
-        sleepCooldown = ActionCooldown(usesRemaining = SLEEP_MAX_USES, cooldownEndTimestamp = SLEEP_COOLDOWN_MILLIS),
+        feedCooldown = ActionCooldown(usesRemaining = FEED_MAX_USES, cooldownEndTimestamp = null),
+        playCooldown = ActionCooldown(usesRemaining = PLAY_MAX_USES, cooldownEndTimestamp = null),
+        sleepCooldown = ActionCooldown(usesRemaining = SLEEP_MAX_USES, cooldownEndTimestamp = null),
         hasSeenIntro = false,
     )
 }

@@ -56,6 +56,13 @@ fun applyDecay(state: SimbaState, now: Long): SimbaState {
 }
 
 /**
+ * This checks if you can click an action (cooldown)
+ */
+fun canPerformAnyAction(state: SimbaState, now: Long): Boolean {
+    return now - state.lastActionTimestamp >= SimbaDefaults.ACTION_CLICK_COOLDOWN_MILLIS
+}
+
+/**
  * Feeds Simba. Specify how much he gets fed.
  * Side effect, also gain energy as Simba eats.
  */

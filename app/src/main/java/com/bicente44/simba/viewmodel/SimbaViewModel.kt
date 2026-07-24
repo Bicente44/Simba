@@ -2,7 +2,9 @@ package com.bicente44.simba.viewmodel
 
 import com.russhwolf.settings.Settings
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.bicente44.simba.model.ActionCooldown
+import com.bicente44.simba.model.ActivityState
 import com.bicente44.simba.model.SimbaDefaults
 import com.bicente44.simba.model.SimbaState
 import com.bicente44.simba.model.applyClean
@@ -10,9 +12,11 @@ import com.bicente44.simba.model.applyDecay
 import com.bicente44.simba.model.applyFeed
 import com.bicente44.simba.model.applyPlay
 import com.bicente44.simba.model.applySleep
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -32,12 +36,34 @@ class SimbaViewModel () : ViewModel() {
     val state: StateFlow<SimbaState> = _state.asStateFlow()
 
     /**
-     * Initialize on app launch. Applies state.
+     * Initialize on app launch. Applies state. Also starts decay timed thread.
      */
     init {
         val decayed = applyDecay(_state.value, System.currentTimeMillis())
         _state.value = decayed
         saveState(decayed)
+
+        viewModelScope.launch {
+            while (true) {
+                delay(5 * 60 * 1000L) // 5 minutes in millis
+                val decayed = applyDecay(_state.value, System.currentTimeMillis())
+                _state.value = decayed
+                saveState(decayed)
+            }
+        }
+        viewModelScope.launch {
+            while (true) {
+                delay(1000) // check every second
+                val current = _state.value
+                if (current.activityState != ActivityState.IDLE &&
+                    System.currentTimeMillis() - current.activityStartTimestamp >= SimbaDefaults.ACTIVITY_DURATION_MILLIS
+                ) {
+                    val reverted = current.copy(activityState = ActivityState.IDLE)
+                    _state.value = reverted
+                    saveState(reverted)
+                }
+            }
+        }
     }
 
     /**
@@ -71,7 +97,7 @@ class SimbaViewModel () : ViewModel() {
             val fed = applyFeed(current, now, foodGain, energyGain)
             val updatedCooldown = current.feedCooldown.afterUse(now, SimbaDefaults.FEED_MAX_USES,
                 SimbaDefaults.FEED_COOLDOWN_MILLIS)
-            val newState = fed.copy(feedCooldown = updatedCooldown)
+            val newState = fed.copy(feedCooldown = updatedCooldown, lastActionTimestamp = now)
             _state.value = newState
             saveState(newState)
         }
@@ -88,7 +114,7 @@ class SimbaViewModel () : ViewModel() {
             val played = applyPlay(current, now, playGain)
             val updatedCooldown = current.playCooldown.afterUse(now, SimbaDefaults.PLAY_MAX_USES,
                 SimbaDefaults.PLAY_COOLDOWN_MILLIS)
-            val newState = played.copy(playCooldown = updatedCooldown)
+            val newState = played.copy(playCooldown = updatedCooldown, lastActionTimestamp = now)
             _state.value = newState
             saveState(newState)
         }
@@ -105,7 +131,7 @@ class SimbaViewModel () : ViewModel() {
             val slept = applySleep(current, now, sleepGain)
             val updatedCooldown = current.sleepCooldown.afterUse(now, SimbaDefaults.SLEEP_MAX_USES,
                 SimbaDefaults.SLEEP_COOLDOWN_MILLIS)
-            val newState = slept.copy(sleepCooldown = updatedCooldown)
+            val newState = slept.copy(sleepCooldown = updatedCooldown, lastActionTimestamp = now)
             _state.value = newState
             saveState(newState)
         }
