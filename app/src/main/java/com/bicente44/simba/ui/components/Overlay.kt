@@ -80,11 +80,13 @@ private fun CloseButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
             ),
         contentAlignment = Alignment.Center
     ) {
-        //painterResource(R.drawable.icon_back) // TODO: Get a back icon asset
+        //painterResource(R.drawable.icon_back) // TODO: Get a back icon asset?
         Canvas(modifier = Modifier.size(16.dp)) {
             val stroke = 2.dp.toPx()
-            drawLine(Color.White, Offset(0f, 0f), Offset(size.width, size.height), strokeWidth = stroke)
-            drawLine(Color.White, Offset(size.width, 0f), Offset(0f, size.height), strokeWidth = stroke)
+            drawCircle(color = Color(0xFF808080), radius = size.minDimension,center = Offset(size.width / 2, size.height / 2))
+            drawLine(Color.White, Offset(size.width * 0.7f, size.height * 0.1f), Offset(size.width * 0.3f, size.height * 0.5f), strokeWidth = stroke)
+            drawLine(Color.White, Offset(size.width * 0.3f, size.height * 0.4f), Offset(size.width * 0.7f, size.height * 0.8f), strokeWidth = stroke)
+
         }
     }
 }

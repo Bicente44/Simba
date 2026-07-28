@@ -31,6 +31,7 @@ fun SimbaApp(modifier: Modifier = Modifier) {
         currentScreen = when (currentScreen) {
             Screen.EXTRAS -> Screen.SETTINGS
             Screen.CREDITS, Screen.INTRO -> Screen.EXTRAS
+            // TODO Check first launch, once we add it, it will probably break
             else -> Screen.HOME
         }
     }
