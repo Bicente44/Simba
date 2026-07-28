@@ -8,4 +8,5 @@ enum class Screen {
     HOME,
     SETTINGS,
     CREDITS,
+    EXTRAS,
 }

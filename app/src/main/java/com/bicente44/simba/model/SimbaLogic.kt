@@ -69,36 +69,44 @@ fun canPerformAnyAction(state: SimbaState, now: Long): Boolean {
 fun applyFeed(state: SimbaState, now: Long, foodGain: Int, energyGain: Int): SimbaState {
     return state.copy(
         hunger = (state.hunger + foodGain).coerceIn(0, 100),
-        energy = (state.energy + energyGain).coerceIn(0, 100)
+        energy = (state.energy + energyGain).coerceIn(0, 100),
+        activityState = ActivityState.EATING,
+        activityStartTimestamp = now
     )
 }
 
 /**
  * When you play with Simba he gains happiness.
  * Happy Simba, happy life
- * TODO: decay energy (remove energy here), as Simba plays he gets tired
  */
 fun applyPlay(state: SimbaState, now: Long, playGain: Int): SimbaState {
     return state.copy(
         happiness = (state.happiness + playGain).coerceIn(0, 100),
+        energy = (state.energy - 7).coerceIn(0, 100),
+        activityState = ActivityState.PLAYING,
+        activityStartTimestamp = now
     )
 }
 
 /**
  * Simba eepy, sleep = energy
- * TODO: decay food (remove feed here), as Simba sleeps he gets hungry
  */
 fun applySleep(state: SimbaState, now: Long, sleepGain: Int): SimbaState {
     return state.copy(
-        energy = (state.hunger + sleepGain).coerceIn(0, 100),
+        energy = (state.energy + sleepGain).coerceIn(0, 100),
+        hunger = (state.hunger - 5).coerceIn(0, 100),
+        activityState = ActivityState.SLEEPING,
+        activityStartTimestamp = now
     )
 }
 
 /**
  * The endless self grooming cat cleans himself
  */
-fun applyClean(state: SimbaState, cleanGain: Int): SimbaState {
+fun applyClean(state: SimbaState, cleanGain: Int, now: Long): SimbaState {
     return state.copy(
         cleanliness = (state.cleanliness + cleanGain).coerceIn(0, 100),
+        activityState = ActivityState.GROOMING,
+        activityStartTimestamp = now
     )
 }

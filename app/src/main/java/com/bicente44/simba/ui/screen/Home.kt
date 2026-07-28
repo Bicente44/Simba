@@ -50,7 +50,7 @@ fun Home(
     var now by remember { mutableStateOf(System.currentTimeMillis()) }
     LaunchedEffect(Unit) {
         while (true) {
-            delay(1000)
+            delay(200)
             now = System.currentTimeMillis()
         }
     }
@@ -155,7 +155,7 @@ fun Home(
                     icon = painterResource(R.drawable.icon_groom),
                     statValue = state.cleanliness,
                     color = Color(0xFFd7f6f9),
-                    onClick = { viewModel.onCleanClicked(5) },
+                    onClick = { viewModel.onCleanClicked(3) },
                     enabled = canPerformAnyAction(state, now)
                 )
             }
@@ -171,16 +171,16 @@ fun Home(
 fun simbaPainterFor(activity: ActivityState, mood: Mood): Painter {
     return when (activity) {
         ActivityState.IDLE -> when (mood) {
-            Mood.HAPPY -> painterResource(R.drawable.simba_silly)
-            Mood.SAD -> painterResource(R.drawable.simba_silly)
-            Mood.TIRED -> painterResource(R.drawable.simba_silly)
-            Mood.SICK -> painterResource(R.drawable.simba_silly)
-            Mood.ANGRY -> painterResource(R.drawable.simba_silly)
-            Mood.NEUTRAL -> painterResource(R.drawable.simba_silly)
+            Mood.HAPPY -> painterResource(R.drawable.simba_curious_happy)
+            Mood.SAD -> painterResource(R.drawable.simba_sad)
+            Mood.TIRED -> painterResource(R.drawable.simba_tired)
+            Mood.SICK -> painterResource(R.drawable.simba_sick)
+            Mood.ANGRY -> painterResource(R.drawable.simba_angry)
+            Mood.NEUTRAL -> painterResource(R.drawable.simba_idle)
         }
-        ActivityState.EATING -> painterResource(R.drawable.simba_silly)
-        ActivityState.PLAYING -> painterResource(R.drawable.simba_silly)
-        ActivityState.SLEEPING -> painterResource(R.drawable.simba_silly)
-        ActivityState.GROOMING -> painterResource(R.drawable.simba_silly)
+        ActivityState.EATING -> painterResource(R.drawable.simba_eating)
+        ActivityState.PLAYING -> painterResource(R.drawable.simba_silly) // TODO: Get a better playing Simba photo
+        ActivityState.SLEEPING -> painterResource(R.drawable.simba_sleep)
+        ActivityState.GROOMING -> painterResource(R.drawable.simba_grooming)
     }
 }

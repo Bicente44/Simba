@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bicente44.simba.model.ActionCooldown
 import com.bicente44.simba.model.ActivityState
+import com.bicente44.simba.model.Language
+import com.bicente44.simba.model.SettingsState
 import com.bicente44.simba.model.SimbaDefaults
 import com.bicente44.simba.model.SimbaState
 import com.bicente44.simba.model.applyClean
@@ -30,10 +32,12 @@ class SimbaViewModel () : ViewModel() {
      * Mutable state, when ViewModel does an action that modifies the state.
      */
     private val _state = MutableStateFlow(loadState())
+    private val _settingsState = MutableStateFlow(loadSettings())
     /**
      * The READ only state, this one is public to the composes.
      */
     val state: StateFlow<SimbaState> = _state.asStateFlow()
+    val settingsState: StateFlow<SettingsState> = _settingsState.asStateFlow()
 
     /**
      * Initialize on app launch. Applies state. Also starts decay timed thread.
@@ -53,7 +57,7 @@ class SimbaViewModel () : ViewModel() {
         }
         viewModelScope.launch {
             while (true) {
-                delay(1000) // check every second
+                delay(200) // check every 0.2 seconds
                 val current = _state.value
                 if (current.activityState != ActivityState.IDLE &&
                     System.currentTimeMillis() - current.activityStartTimestamp >= SimbaDefaults.ACTIVITY_DURATION_MILLIS
@@ -142,7 +146,8 @@ class SimbaViewModel () : ViewModel() {
      */
     fun onCleanClicked(cleanGain: Int) {
         // same pattern, no cooldown check needed
-        val cleaned = applyClean(_state.value, cleanGain)
+        val now = System.currentTimeMillis()
+        val cleaned = applyClean(_state.value, cleanGain, now)
         _state.value = cleaned
         saveState(cleaned)
     }
@@ -155,4 +160,48 @@ class SimbaViewModel () : ViewModel() {
         _state.value = updated
         saveState(updated)
     }
+
+    private fun loadSettings(): SettingsState {
+        val save = settings.getStringOrNull("simba_settings")
+        return if (save == null) {
+            SimbaDefaults.defaultSettings()
+        } else {
+            Json.decodeFromString<SettingsState>(save)
+        }
+    }
+
+    private fun saveSettings(newSettings: SettingsState) {
+        settings.putString("simba_settings", Json.encodeToString(newSettings))
+    }
+
+    fun onMusicToggled(enabled: Boolean) {
+        val updated = _settingsState.value.copy(musicEnabled = enabled)
+        _settingsState.value = updated
+        saveSettings(updated)
+    }
+
+    fun onMusicVolumeChanged(volume: Float) {
+        val updated = _settingsState.value.copy(musicVolume = volume.coerceIn(0f, 1f))
+        _settingsState.value = updated
+        saveSettings(updated)
+    }
+
+    fun onSfxToggled(enabled: Boolean) {
+        val updated = _settingsState.value.copy(sfxEnabled = enabled)
+        _settingsState.value = updated
+        saveSettings(updated)
+    }
+
+    fun onSfxVolumeChanged(volume: Float) {
+        val updated = _settingsState.value.copy(sfxVolume = volume.coerceIn(0f, 1f))
+        _settingsState.value = updated
+        saveSettings(updated)
+    }
+
+    fun onLanguageChanged(language: Language) {
+        val updated = _settingsState.value.copy(language = language)
+        _settingsState.value = updated
+        saveSettings(updated)
+    }
+
 }

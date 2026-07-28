@@ -29,12 +29,15 @@ object SimbaDefaults {
     const val HEALTH_DECAY_PER_TICK = 0.1
 
     // COOLDOWN times
-    const val ACTIVITY_DURATION_MILLIS: Long = 3000L    // 3 seconds
-    const val ACTION_CLICK_COOLDOWN_MILLIS: Long = 2000L// 2 seconds
+    const val ACTIVITY_DURATION_MILLIS: Long = 2000L    // 3 seconds
+    const val ACTION_CLICK_COOLDOWN_MILLIS: Long = ACTIVITY_DURATION_MILLIS// 2 seconds
     const val FEED_COOLDOWN_MILLIS: Long = 60000        // 1 minute
     const val PLAY_COOLDOWN_MILLIS: Long = 60000
     const val SLEEP_COOLDOWN_MILLIS: Long = 60000
 
+    /**
+     * Default stats for when a fresh Simba is created
+     */
     fun newSimba(now: Long): SimbaState = SimbaState(
         hunger = INITIAL_HUNGER,
         energy = INITIAL_ENERGY,
@@ -50,5 +53,16 @@ object SimbaDefaults {
         playCooldown = ActionCooldown(usesRemaining = PLAY_MAX_USES, cooldownEndTimestamp = null),
         sleepCooldown = ActionCooldown(usesRemaining = SLEEP_MAX_USES, cooldownEndTimestamp = null),
         hasSeenIntro = false,
+    )
+
+    /**
+     * Default settings when initially created
+     */
+    fun defaultSettings(): SettingsState = SettingsState (
+        musicEnabled = true,
+        musicVolume = 1f,
+        sfxEnabled = true,
+        sfxVolume = 1f,
+        language = Language.ENGLISH
     )
 }
