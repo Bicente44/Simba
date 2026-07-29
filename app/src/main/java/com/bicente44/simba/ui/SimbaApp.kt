@@ -30,7 +30,7 @@ fun SimbaApp(modifier: Modifier = Modifier) {
     fun goBack() {
         currentScreen = when (currentScreen) {
             Screen.EXTRAS -> Screen.SETTINGS
-            Screen.CREDITS, Screen.INTRO -> Screen.EXTRAS
+            Screen.CREDITS, Screen.INTRO, Screen.GALLERY -> Screen.EXTRAS
             // TODO Check first launch, once we add it, it will probably break
             else -> Screen.HOME
         }
@@ -60,8 +60,8 @@ fun SimbaApp(modifier: Modifier = Modifier) {
                 onRewatchIntroClicked = { currentScreen = Screen.INTRO },
                 )
             Screen.INTRO -> IntroCutscene(
-                onBack = ::goBack,
-                onDismissAll = ::dismissAll
+                viewModel = viewModel,
+                onFinished = { currentScreen = Screen.HOME },
             )
             else -> {}
         }

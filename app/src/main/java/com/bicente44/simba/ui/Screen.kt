@@ -9,4 +9,5 @@ enum class Screen {
     SETTINGS,
     CREDITS,
     EXTRAS,
+    GALLERY,
 }
