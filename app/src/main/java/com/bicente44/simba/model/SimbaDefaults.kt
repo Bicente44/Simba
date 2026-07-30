@@ -24,7 +24,7 @@ object SimbaDefaults {
     const val HUNGER_DECAY_PER_TICK = 0.2
     const val ENERGY_DECAY_PER_TICK = 0.2
     const val CLEAN_DECAY_PER_TICK = 0.25
-    const val HAPPINESS_DECAY_NORMAL = 0.11
+    const val HAPPINESS_DECAY_PER_TICK = 0.20
     const val HAPPINESS_DECAY_SEVERE = 0.5
     const val HEALTH_DECAY_PER_TICK = 0.2
     const val THRIVING_STAT_THRESHOLD = 85

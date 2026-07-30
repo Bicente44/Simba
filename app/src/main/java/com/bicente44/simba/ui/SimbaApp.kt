@@ -50,10 +50,12 @@ fun SimbaApp(modifier: Modifier = Modifier) {
                 onExtrasClicked = { currentScreen = Screen.EXTRAS }
             )
             Screen.CREDITS -> Credits(
+                viewModel = viewModel,
                 onBack = ::goBack,
                 onDismissAll = ::dismissAll
             )
             Screen.EXTRAS -> Extra(
+                viewModel = viewModel,
                 onBack = ::goBack,
                 onDismissAll = ::dismissAll,
                 onCreditsClicked = { currentScreen = Screen.CREDITS },

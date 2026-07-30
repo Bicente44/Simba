@@ -46,7 +46,7 @@ fun applyDecay(state: SimbaState, now: Long): SimbaState {
 
     val isHurting = newHunger == 0 || newEnergy == 0
 
-    val happinessDecay = if (isHurting) SimbaDefaults.HAPPINESS_DECAY_SEVERE else SimbaDefaults.HAPPINESS_DECAY_NORMAL
+    val happinessDecay = if (isHurting) SimbaDefaults.HAPPINESS_DECAY_SEVERE else SimbaDefaults.HAPPINESS_DECAY_PER_TICK
     val newHappiness = (state.happiness - (happinessDecay * elapsed * decayMultiplier)).toInt().coerceIn(0, 100)
 
     val isThriving = !isHurting &&

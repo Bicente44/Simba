@@ -22,6 +22,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.bicente44.simba.model.internationalization.SettingsStringKey
+import com.bicente44.simba.model.internationalization.SettingsStrings
 
 @Composable
 fun Settings(
@@ -33,11 +35,11 @@ fun Settings(
     val settingsState by viewModel.settingsState.collectAsState()
     var languageMenuExpanded by remember { mutableStateOf(false) }
 
-    Overlay(title = "Settings", onBack = onBack, onDismissAll = onDismissAll) {
-        Text("Audio & SFX")
+    Overlay(title = SettingsStrings.get(SettingsStringKey.TITLE, settingsState.language), onBack = onBack, onDismissAll = onDismissAll) {
+        Text(text = SettingsStrings.get(SettingsStringKey.AUDIO_SFX_HEADER, settingsState.language))
 
         Row {
-            Text("Main")
+            Text(text = SettingsStrings.get(SettingsStringKey.MUSIC_VOLUME_LABEL, settingsState.language))
             Spacer(Modifier.size(10.dp))
             Slider(
                 value = settingsState.musicVolume,
@@ -48,7 +50,7 @@ fun Settings(
         }
 
         Row {
-            Text("SFX")
+            Text(text = SettingsStrings.get(SettingsStringKey.SFX_VOLUME_LABEL, settingsState.language))
             Spacer(Modifier.size(10.dp))
             Slider(
                 value = settingsState.sfxVolume,
@@ -74,7 +76,7 @@ fun Settings(
                     }
                 )
                 DropdownMenuItem(
-                    text = { Text("French") },
+                    text = { Text("Français") },
                     onClick = {
                         viewModel.onLanguageChanged(Language.FRENCH)
                         languageMenuExpanded = false
@@ -82,6 +84,6 @@ fun Settings(
                 )
             }
         }
-        Button(onClick = onExtrasClicked) { Text("Extras") }
+        Button(onClick = onExtrasClicked) { Text(text = SettingsStrings.get(SettingsStringKey.EXTRAS_BUTTON, settingsState.language)) }
     }
 }

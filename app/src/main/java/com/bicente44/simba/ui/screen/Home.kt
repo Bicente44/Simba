@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.bicente44.simba.model.ActivityState
@@ -39,6 +37,8 @@ import com.bicente44.simba.model.calculateMood
 import com.bicente44.simba.viewmodel.SimbaViewModel
 import com.bicente44.simba.R
 import com.bicente44.simba.model.canPerformAnyAction
+import com.bicente44.simba.model.internationalization.HomeStringKey
+import com.bicente44.simba.model.internationalization.HomeStrings
 import com.bicente44.simba.model.isDead
 import com.bicente44.simba.ui.components.StatButton
 import kotlinx.coroutines.delay
@@ -50,6 +50,7 @@ fun Home(
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.state.collectAsState()
+    val settingsState by viewModel.settingsState.collectAsState()
     var now by remember { mutableStateOf(System.currentTimeMillis()) }
     LaunchedEffect(Unit) {
         while (true) {
@@ -81,13 +82,13 @@ fun Home(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Age: $age")
+            Text(text = HomeStrings.ageLabel(age, settingsState.language))
 
             if (isDead(state)) {
                 Button(
                     onClick = { viewModel.onRestartSimba() }
                 ) {
-                    Text("Restart")
+                    Text(text = HomeStrings.get(HomeStringKey.RESTART_BUTTON, settingsState.language))
                 }
             }
 
@@ -143,7 +144,7 @@ fun Home(
                     icon = painterResource(R.drawable.icon_cat_food),
                     statValue = state.hunger,
                     color = Color(0xFFfa8072),
-                    onClick = { viewModel.onFeedClicked(15, 15, 5) },
+                    onClick = { viewModel.onFeedClicked(15, 15, 7) },
                     enabled = state.feedCooldown.canUse(now) && canPerformAnyAction(state, now) && !isDead(state)
                 )
                 StatButton(
