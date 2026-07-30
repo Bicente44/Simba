@@ -45,11 +45,6 @@ fun Settings(
                 valueRange = 0f..1f,
                 modifier = Modifier.weight(1f)
             )
-            Spacer(Modifier.size(10.dp))
-            Checkbox(
-                checked = settingsState.musicEnabled,
-                onCheckedChange = viewModel::onMusicToggled,
-            )
         }
 
         Row {
@@ -60,11 +55,6 @@ fun Settings(
                 onValueChange = viewModel::onSfxVolumeChanged,
                 valueRange = 0f..1f,
                 modifier = Modifier.weight(1f)
-            )
-            Spacer(Modifier.size(10.dp))
-            Checkbox(
-                checked = settingsState.sfxEnabled,
-                onCheckedChange = viewModel::onSfxToggled
             )
         }
 

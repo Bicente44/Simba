@@ -31,7 +31,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.bicente44.simba.R
 import com.bicente44.simba.viewmodel.SimbaViewModel
 
@@ -114,7 +116,7 @@ fun IntroCutscene(
                         modifier = Modifier.align(Alignment.CenterStart)
                     ) {
                         Image(
-                            painter = painterResource(R.drawable.icon_settings),
+                            painter = painterResource(R.drawable.icon_back),
                             contentDescription = "Previous scene",
                             alpha = if (currentSceneIndex > 0) 1f else 0.3f,
                         )
@@ -137,6 +139,15 @@ fun IntroCutscene(
                     color = Color.Black,
                     modifier = Modifier.padding(10.dp)
                 )
+                Spacer(Modifier.weight(1f))
+                if (currentSceneIndex < 1)
+                    Text(
+                        text = "(HINT: Tap the image to view the next scene)",
+                        color = Color.Black,
+                        fontSize = 10.sp,
+                        fontStyle = FontStyle.Italic,
+                        modifier = Modifier.padding(10.dp)
+                    )
             }
         }
     }

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.LinearProgressIndicator
@@ -28,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.bicente44.simba.model.ActivityState
@@ -37,6 +39,7 @@ import com.bicente44.simba.model.calculateMood
 import com.bicente44.simba.viewmodel.SimbaViewModel
 import com.bicente44.simba.R
 import com.bicente44.simba.model.canPerformAnyAction
+import com.bicente44.simba.model.isDead
 import com.bicente44.simba.ui.components.StatButton
 import kotlinx.coroutines.delay
 
@@ -73,23 +76,32 @@ fun Home(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(16.dp)
+                .padding(top = 24.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = "Age: $age")
 
-            IconButton(onClick = onSettingsClicked) {
+            if (isDead(state)) {
+                Button(
+                    onClick = { viewModel.onRestartSimba() }
+                ) {
+                    Text("Restart")
+                }
+            }
+
+            IconButton(onClick = onSettingsClicked, modifier = Modifier.size(55.dp)) {
                 Image(
                     painter = painterResource(R.drawable.icon_settings),
-                    contentDescription = "Settings"
+                    contentDescription = "Settings",
                 )
             }
         }
 
         // Simba
         Image(
-            painter = simbaPainterFor(state.activityState, mood),
+            painter = simbaPainterFor(state.activityState, mood, isDead(state)),
             contentDescription = null,
             modifier = Modifier.align(Alignment.Center)
         )
@@ -131,15 +143,15 @@ fun Home(
                     icon = painterResource(R.drawable.icon_cat_food),
                     statValue = state.hunger,
                     color = Color(0xFFfa8072),
-                    onClick = { viewModel.onFeedClicked(15, 15) },
-                    enabled = state.feedCooldown.canUse(now) && canPerformAnyAction(state, now)
+                    onClick = { viewModel.onFeedClicked(15, 15, 5) },
+                    enabled = state.feedCooldown.canUse(now) && canPerformAnyAction(state, now) && !isDead(state)
                 )
                 StatButton(
                     icon = painterResource(R.drawable.icon_play),
                     statValue = state.happiness,
                     color = Color(0xFFfed88f),
-                    onClick = { viewModel.onPlayClicked(15) },
-                    enabled = state.playCooldown.canUse(now) && canPerformAnyAction(state, now)
+                    onClick = { viewModel.onPlayClicked(15, 7) },
+                    enabled = state.playCooldown.canUse(now) && canPerformAnyAction(state, now) && !isDead(state)
                 )
             }
             Row(horizontalArrangement = Arrangement.SpaceEvenly) {
@@ -147,8 +159,8 @@ fun Home(
                     icon = painterResource(R.drawable.icon_sleep),
                     statValue = state.energy,
                     color = Color(0xFFc4a9f9),
-                    onClick = { viewModel.onSleepClicked(15) },
-                    enabled = state.sleepCooldown.canUse(now) && canPerformAnyAction(state, now)
+                    onClick = { viewModel.onSleepClicked(15, 5, 5) },
+                    enabled = state.sleepCooldown.canUse(now) && canPerformAnyAction(state, now) && !isDead(state)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 StatButton(
@@ -156,7 +168,7 @@ fun Home(
                     statValue = state.cleanliness,
                     color = Color(0xFFd7f6f9),
                     onClick = { viewModel.onCleanClicked(3) },
-                    enabled = canPerformAnyAction(state, now)
+                    enabled = canPerformAnyAction(state, now) && !isDead(state)
                 )
             }
         }
@@ -168,7 +180,8 @@ fun Home(
  * TODO: Replace simba_silly stubs with proper images
  */
 @Composable
-fun simbaPainterFor(activity: ActivityState, mood: Mood): Painter {
+fun simbaPainterFor(activity: ActivityState, mood: Mood, isDead: Boolean): Painter {
+    if (isDead) return painterResource(R.drawable.simba_heaven)
     return when (activity) {
         ActivityState.IDLE -> when (mood) {
             Mood.HAPPY -> painterResource(R.drawable.simba_curious_happy)

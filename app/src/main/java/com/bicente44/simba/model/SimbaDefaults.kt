@@ -21,12 +21,14 @@ object SimbaDefaults {
     const val OFFLINE_DECAY_MULTIPLIER = 0.5 // Offline decay is gentler than online
 
     // DECAY
-    const val HUNGER_DECAY_PER_TICK = 0.15
+    const val HUNGER_DECAY_PER_TICK = 0.2
     const val ENERGY_DECAY_PER_TICK = 0.2
-    const val CLEAN_DECAY_PER_TICK = 0.15
-    const val HAPPINESS_DECAY_NORMAL = 0.05
-    const val HAPPINESS_DECAY_SEVERE = 0.3
-    const val HEALTH_DECAY_PER_TICK = 0.1
+    const val CLEAN_DECAY_PER_TICK = 0.25
+    const val HAPPINESS_DECAY_NORMAL = 0.11
+    const val HAPPINESS_DECAY_SEVERE = 0.5
+    const val HEALTH_DECAY_PER_TICK = 0.2
+    const val THRIVING_STAT_THRESHOLD = 85
+    const val HEALTH_REGEN_PER_TICK = 0.08
 
     // COOLDOWN times
     const val ACTIVITY_DURATION_MILLIS: Long = 2000L    // 3 seconds
@@ -59,9 +61,7 @@ object SimbaDefaults {
      * Default settings when initially created
      */
     fun defaultSettings(): SettingsState = SettingsState (
-        musicEnabled = true,
         musicVolume = 1f,
-        sfxEnabled = true,
         sfxVolume = 1f,
         language = Language.ENGLISH
     )

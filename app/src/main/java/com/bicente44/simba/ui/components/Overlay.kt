@@ -1,6 +1,7 @@
 package com.bicente44.simba.ui.components
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -21,7 +22,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.bicente44.simba.R
 
 @Composable
 fun Overlay(
@@ -72,7 +75,7 @@ fun Overlay(
 private fun CloseButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
-            .size(32.dp)
+            .size(42.dp)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
@@ -80,13 +83,9 @@ private fun CloseButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
             ),
         contentAlignment = Alignment.Center
     ) {
-        //painterResource(R.drawable.icon_back) // TODO: Get a back icon asset?
-        Canvas(modifier = Modifier.size(16.dp)) {
-            val stroke = 2.dp.toPx()
-            drawCircle(color = Color(0xFF808080), radius = size.minDimension,center = Offset(size.width / 2, size.height / 2))
-            drawLine(Color.White, Offset(size.width * 0.7f, size.height * 0.1f), Offset(size.width * 0.3f, size.height * 0.5f), strokeWidth = stroke)
-            drawLine(Color.White, Offset(size.width * 0.3f, size.height * 0.4f), Offset(size.width * 0.7f, size.height * 0.8f), strokeWidth = stroke)
-
-        }
+        Image(
+            painterResource(R.drawable.icon_back),
+            contentDescription = "",
+        )
     }
 }

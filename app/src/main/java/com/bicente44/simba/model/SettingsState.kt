@@ -7,9 +7,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class SettingsState(
-    val musicEnabled: Boolean,
     val musicVolume: Float,
-    val sfxEnabled: Boolean,
     val sfxVolume: Float,
     val language: Language
 )

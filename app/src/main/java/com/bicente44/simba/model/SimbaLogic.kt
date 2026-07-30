@@ -24,9 +24,16 @@ fun calculateMood(state: SimbaState): Mood {
 }
 
 /**
+ * Simba is dead when health hits zero.
+ */
+fun isDead(state: SimbaState): Boolean = state.health <= 0
+
+/**
  * Applies decay after every tick, if no energy or hunger Simba loses HP.
  */
 fun applyDecay(state: SimbaState, now: Long): SimbaState {
+    if (isDead(state)) return state
+
     val elapsedMillis = now - state.lastSeenTimestamp
     val elapsed = elapsedMillis / (1000 * 60)
 
@@ -38,12 +45,21 @@ fun applyDecay(state: SimbaState, now: Long): SimbaState {
     val newCleanliness = (state.cleanliness - (SimbaDefaults.CLEAN_DECAY_PER_TICK * elapsed * decayMultiplier)).toInt().coerceIn(0, 100)
 
     val isHurting = newHunger == 0 || newEnergy == 0
-    val happinessDecay = if (isHurting) SimbaDefaults.HAPPINESS_DECAY_SEVERE
-    else SimbaDefaults.HAPPINESS_DECAY_NORMAL
-    val newHappiness = (state.happiness - (happinessDecay * elapsed)).toInt().coerceIn(0, 100)
 
-    val newHealth = if (isHurting) (state.health - (SimbaDefaults.HEALTH_DECAY_PER_TICK * elapsed)).toInt().coerceIn(0, 100)
-    else state.health
+    val happinessDecay = if (isHurting) SimbaDefaults.HAPPINESS_DECAY_SEVERE else SimbaDefaults.HAPPINESS_DECAY_NORMAL
+    val newHappiness = (state.happiness - (happinessDecay * elapsed * decayMultiplier)).toInt().coerceIn(0, 100)
+
+    val isThriving = !isHurting &&
+            newHunger > SimbaDefaults.THRIVING_STAT_THRESHOLD &&
+            newEnergy > SimbaDefaults.THRIVING_STAT_THRESHOLD &&
+            newCleanliness > SimbaDefaults.THRIVING_STAT_THRESHOLD &&
+            newHappiness > SimbaDefaults.THRIVING_STAT_THRESHOLD
+
+    val newHealth = when {
+        isHurting -> (state.health - (SimbaDefaults.HEALTH_DECAY_PER_TICK * elapsed * decayMultiplier)).toInt().coerceIn(0, 100) // now correctly uses decayMultiplier
+        isThriving -> (state.health + (SimbaDefaults.HEALTH_REGEN_PER_TICK * elapsed * decayMultiplier)).toInt().coerceIn(0, 100)
+        else -> state.health
+    }
 
     return state.copy(
         hunger = newHunger,
@@ -66,10 +82,17 @@ fun canPerformAnyAction(state: SimbaState, now: Long): Boolean {
  * Feeds Simba. Specify how much he gets fed.
  * Side effect, also gain energy as Simba eats.
  */
-fun applyFeed(state: SimbaState, now: Long, foodGain: Int, energyGain: Int): SimbaState {
+fun applyFeed(
+    state: SimbaState,
+    now: Long,
+    foodGain: Int,
+    energyGain: Int,
+    healthGain: Int
+): SimbaState {
     return state.copy(
         hunger = (state.hunger + foodGain).coerceIn(0, 100),
         energy = (state.energy + energyGain).coerceIn(0, 100),
+        health = (state.health + healthGain).coerceIn(0, 100),
         activityState = ActivityState.EATING,
         activityStartTimestamp = now
     )
@@ -79,10 +102,15 @@ fun applyFeed(state: SimbaState, now: Long, foodGain: Int, energyGain: Int): Sim
  * When you play with Simba he gains happiness.
  * Happy Simba, happy life
  */
-fun applyPlay(state: SimbaState, now: Long, playGain: Int): SimbaState {
+fun applyPlay(
+    state: SimbaState,
+    now: Long,
+    playGain: Int,
+    energyLoss: Int,
+): SimbaState {
     return state.copy(
         happiness = (state.happiness + playGain).coerceIn(0, 100),
-        energy = (state.energy - 7).coerceIn(0, 100),
+        energy = (state.energy - energyLoss).coerceIn(0, 100),
         activityState = ActivityState.PLAYING,
         activityStartTimestamp = now
     )
@@ -91,10 +119,17 @@ fun applyPlay(state: SimbaState, now: Long, playGain: Int): SimbaState {
 /**
  * Simba eepy, sleep = energy
  */
-fun applySleep(state: SimbaState, now: Long, sleepGain: Int): SimbaState {
+fun applySleep(
+    state: SimbaState,
+    now: Long,
+    sleepGain: Int,
+    hungerLoss: Int,
+    healthGain: Int
+): SimbaState {
     return state.copy(
         energy = (state.energy + sleepGain).coerceIn(0, 100),
-        hunger = (state.hunger - 5).coerceIn(0, 100),
+        hunger = (state.hunger - hungerLoss).coerceIn(0, 100),
+        health = (state.health + healthGain).coerceIn(0, 100),
         activityState = ActivityState.SLEEPING,
         activityStartTimestamp = now
     )
