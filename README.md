@@ -4,18 +4,25 @@ This is a Tamagotchi android app featuring the greatest cat ever, Simba.
 
 Play and take care of Simba.
 
-This Android app follows MVVM architecture + Multiplatform Settings for the persistence
+<img src="docs/images/screenshot2.jpg" width="30%" /> <img src="docs/images/screenshot1.jpg" width="30%" /> <img src="docs/images/screenshot3.jpg" width="30%" />
 
-This currently runs on android, but I will be working towards IOS soon hopefully
+## Built With
+- Kotlin + Jetpack Compose
+- MVVM architecture (View / ViewModel / Model)
+- [Multiplatform Settings](https://github.com/russhwolf/multiplatform-settings) for persistence
+- kotlinx.serialization
 
-![Simba Content](docs/images/screenshot1.jpg)
-![Simba Backstory](docs/images/screenshot2.jpg)
-![Simba Eepy](docs/images/screenshot3.jpg)
+## Platform
+- Currently Android only. iOS support via Kotlin Multiplatform is planned, not started yet.
 
-## Features TODO
- - [x] Debug mode (requires some code or secret, this gives +- button for each stats)
+## Download
+- Latest APK is being made....
+- Sideloading required, must enable "install unknown apps"
+
+## TODO
+### Features
  - [ ] Bundle game icon selection options to choose from
-## Assets TODO
+### Assets
  - [ ] Remake action icons
    - [ ] Food
    - [ ] Play
