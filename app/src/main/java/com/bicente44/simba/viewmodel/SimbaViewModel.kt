@@ -12,6 +12,7 @@ import com.bicente44.simba.model.SimbaState
 import com.bicente44.simba.model.applyClean
 import com.bicente44.simba.model.applyDecay
 import com.bicente44.simba.model.applyFeed
+import com.bicente44.simba.model.applyPet
 import com.bicente44.simba.model.applyPlay
 import com.bicente44.simba.model.applySleep
 import com.bicente44.simba.model.isDead
@@ -203,6 +204,20 @@ class SimbaViewModel () : ViewModel() {
         val updated = _settingsState.value.copy(language = language)
         _settingsState.value = updated
         saveSettings(updated)
+    }
+
+    /**
+     * Every petting tick this function runs
+     */
+    fun onPetTick(showPettingPose: Boolean) {
+        val now = System.currentTimeMillis()
+        val current = _state.value
+        if (isDead(current)) return
+        _state.value = applyPet(current, now, showPettingPose)
+    }
+
+    fun onPetEnded() {
+        saveState(_state.value)
     }
 
 }

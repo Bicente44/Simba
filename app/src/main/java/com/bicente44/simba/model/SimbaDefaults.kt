@@ -36,6 +36,14 @@ object SimbaDefaults {
     const val FEED_COOLDOWN_MILLIS: Long = 60000        // 1 minute
     const val PLAY_COOLDOWN_MILLIS: Long = 60000
     const val SLEEP_COOLDOWN_MILLIS: Long = 60000
+    // PETTING specifics
+    const val PETTING_HAPPINESS_CAP = 40                        // Happiness gain cap from petting
+    const val PETTING_COOLDOWN_MILLIS: Long = 3 * 60 * 1000L    // 3 Minutes
+    const val PETTING_SPARKLE_WARMUP_MILLIS: Long = 2000L       // 2 seconds
+    const val PETTING_TICK_INTERVAL_MILLIS: Long = 200L         // 0.2 seconds
+    const val PETTING_HAPPINESS_PER_TICK = 1
+    const val SPARKLE_SPAWN_INTERVAL_MILLIS = 100L
+    const val SPARKLE_LIFETIME_MILLIS = 600
 
     /**
      * Default stats for when a fresh Simba is created
@@ -55,6 +63,8 @@ object SimbaDefaults {
         playCooldown = ActionCooldown(usesRemaining = PLAY_MAX_USES, cooldownEndTimestamp = null),
         sleepCooldown = ActionCooldown(usesRemaining = SLEEP_MAX_USES, cooldownEndTimestamp = null),
         hasSeenIntro = false,
+        pettingGainSinceCooldown = 0,
+        pettingCooldownEndTimestamp = null,
     )
 
     /**

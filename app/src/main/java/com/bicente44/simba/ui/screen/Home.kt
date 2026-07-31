@@ -26,12 +26,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.bicente44.simba.model.ActivityState
-import com.bicente44.simba.model.Mood
 import com.bicente44.simba.model.calculateAge
 import com.bicente44.simba.model.calculateMood
 import com.bicente44.simba.viewmodel.SimbaViewModel
@@ -40,6 +37,7 @@ import com.bicente44.simba.model.canPerformAnyAction
 import com.bicente44.simba.model.internationalization.HomeStringKey
 import com.bicente44.simba.model.internationalization.HomeStrings
 import com.bicente44.simba.model.isDead
+import com.bicente44.simba.ui.components.PettableSimba
 import com.bicente44.simba.ui.components.StatButton
 import kotlinx.coroutines.delay
 
@@ -54,7 +52,7 @@ fun Home(
     var now by remember { mutableStateOf(System.currentTimeMillis()) }
     LaunchedEffect(Unit) {
         while (true) {
-            delay(200)
+            delay(150)
             now = System.currentTimeMillis()
         }
     }
@@ -101,9 +99,12 @@ fun Home(
         }
 
         // Simba
-        Image(
-            painter = simbaPainterFor(state.activityState, mood, isDead(state)),
-            contentDescription = null,
+        PettableSimba(
+            activityState = state.activityState,
+            mood = mood,
+            isDead = isDead(state),
+            onPetTick = viewModel::onPetTick,
+            onPetEnded = viewModel::onPetEnded,
             modifier = Modifier.align(Alignment.Center)
         )
 
@@ -176,25 +177,3 @@ fun Home(
     }
 }
 
-/**
- * Helper function to call to paint the specific Simba.
- * TODO: Replace simba_silly stubs with proper images
- */
-@Composable
-fun simbaPainterFor(activity: ActivityState, mood: Mood, isDead: Boolean): Painter {
-    if (isDead) return painterResource(R.drawable.simba_heaven)
-    return when (activity) {
-        ActivityState.IDLE -> when (mood) {
-            Mood.HAPPY -> painterResource(R.drawable.simba_curious_happy)
-            Mood.SAD -> painterResource(R.drawable.simba_sad)
-            Mood.TIRED -> painterResource(R.drawable.simba_tired)
-            Mood.SICK -> painterResource(R.drawable.simba_sick)
-            Mood.ANGRY -> painterResource(R.drawable.simba_angry)
-            Mood.NEUTRAL -> painterResource(R.drawable.simba_idle)
-        }
-        ActivityState.EATING -> painterResource(R.drawable.simba_eating)
-        ActivityState.PLAYING -> painterResource(R.drawable.simba_silly) // TODO: Get a better playing Simba photo
-        ActivityState.SLEEPING -> painterResource(R.drawable.simba_sleep)
-        ActivityState.GROOMING -> painterResource(R.drawable.simba_grooming)
-    }
-}

@@ -15,8 +15,7 @@ Will run on android but IOS compatability in mind for the future.
  - [ ] Debug mode (requires code, this gives +- button for stats) (future)
  - [ ] Bundle game icon selection options to choose from (future)
  - [ ] Simba talking/text bubble
- - [x] * Gallery view (See if not all, most Simba assets and maybe more secret assets)
- - [ ] * Add ability to pet Simba (Visual FX like sparkles, raises happiness)
+ - [x] * Add ability to pet Simba (Visual FX like sparkles, raises happiness)
 ### Assets
  - [ ] Remake action icons
    - [ ] Food

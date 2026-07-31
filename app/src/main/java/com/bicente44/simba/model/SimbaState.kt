@@ -21,4 +21,6 @@ data class SimbaState (
     val playCooldown: ActionCooldown,
     val sleepCooldown: ActionCooldown,
     val hasSeenIntro: Boolean,
+    val pettingGainSinceCooldown: Int,
+    val pettingCooldownEndTimestamp: Long?,
 )

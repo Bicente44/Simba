@@ -145,3 +145,36 @@ fun applyClean(state: SimbaState, cleanGain: Int, now: Long): SimbaState {
         activityStartTimestamp = now
     )
 }
+
+/**
+ * Checks if you can gain happiness from petting
+  */
+fun canGainFromPetting(state: SimbaState, now: Long): Boolean {
+    val cooldownActive = (state.pettingCooldownEndTimestamp != null) && (now < state.pettingCooldownEndTimestamp)
+    return !cooldownActive
+}
+
+/**
+ *
+ */
+fun applyPet(state: SimbaState, now: Long, showPettingPose: Boolean): SimbaState {
+    val withPose = if (showPettingPose) {
+        state.copy(activityState = ActivityState.PETTING, activityStartTimestamp = now)
+    } else {
+        state
+    }
+    if (!canGainFromPetting(state, now)) return withPose
+
+    val newGain = withPose.pettingGainSinceCooldown + SimbaDefaults.PETTING_HAPPINESS_PER_TICK
+    val newHappiness = (withPose.happiness + SimbaDefaults.PETTING_HAPPINESS_PER_TICK).coerceIn(0, 100)
+
+    return if (newGain >= SimbaDefaults.PETTING_HAPPINESS_CAP) {
+        withPose.copy(
+            happiness = newHappiness,
+            pettingGainSinceCooldown = 0,
+            pettingCooldownEndTimestamp = now + SimbaDefaults.PETTING_COOLDOWN_MILLIS
+        )
+    } else {
+        withPose.copy(happiness = newHappiness, pettingGainSinceCooldown = newGain)
+    }
+}

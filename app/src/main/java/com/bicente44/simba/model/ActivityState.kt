@@ -11,5 +11,6 @@ enum class ActivityState {
     EATING,
     PLAYING,
     GROOMING,
-    SLEEPING
+    SLEEPING,
+    PETTING,
 }
