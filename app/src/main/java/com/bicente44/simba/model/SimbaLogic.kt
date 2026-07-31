@@ -178,3 +178,19 @@ fun applyPet(state: SimbaState, now: Long, showPettingPose: Boolean): SimbaState
         withPose.copy(happiness = newHappiness, pettingGainSinceCooldown = newGain)
     }
 }
+
+/**
+ * Enums for debugging, these list the stats that can be +- for amount per stat
+ */
+enum class DebugStat { HUNGER, ENERGY, CLEANLINESS, HAPPINESS, HEALTH }
+
+/**
+ * The function that bypasses stat adjustment, Used for debugging add and remove stats
+ */
+fun applyDebugAdjustment(state: SimbaState, stat: DebugStat, amount: Int): SimbaState = when (stat) {
+    DebugStat.HUNGER -> state.copy(hunger = (state.hunger + amount).coerceIn(0, 100))
+    DebugStat.ENERGY -> state.copy(energy = (state.energy + amount).coerceIn(0, 100))
+    DebugStat.CLEANLINESS -> state.copy(cleanliness = (state.cleanliness + amount).coerceIn(0, 100))
+    DebugStat.HAPPINESS -> state.copy(happiness = (state.happiness + amount).coerceIn(0, 100))
+    DebugStat.HEALTH -> state.copy(health = (state.health + amount).coerceIn(0, 100))
+}

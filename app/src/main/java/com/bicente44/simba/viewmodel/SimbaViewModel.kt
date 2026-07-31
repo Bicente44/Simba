@@ -5,11 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bicente44.simba.model.ActionCooldown
 import com.bicente44.simba.model.ActivityState
+import com.bicente44.simba.model.DebugStat
 import com.bicente44.simba.model.Language
 import com.bicente44.simba.model.SettingsState
 import com.bicente44.simba.model.SimbaDefaults
 import com.bicente44.simba.model.SimbaState
 import com.bicente44.simba.model.applyClean
+import com.bicente44.simba.model.applyDebugAdjustment
 import com.bicente44.simba.model.applyDecay
 import com.bicente44.simba.model.applyFeed
 import com.bicente44.simba.model.applyPet
@@ -23,7 +25,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-
 /**
  * A ViewModel for the Simba app, currently handles business coordination + persistence calls.
  */
@@ -43,6 +44,8 @@ class SimbaViewModel () : ViewModel() {
      */
     val state: StateFlow<SimbaState> = _state.asStateFlow()
     val settingsState: StateFlow<SettingsState> = _settingsState.asStateFlow()
+
+    var isDebug: Boolean = false
 
     /**
      * Initialize on app launch. Applies state. Also starts decay timed thread.
@@ -221,6 +224,15 @@ class SimbaViewModel () : ViewModel() {
 
     fun onPetEnded() {
         saveState(_state.value)
+    }
+
+    /**
+     * Function to delegate view to logic for adjusting stats while bypassing onAction functions
+     */
+    fun onDebugAdjustStat(stat: DebugStat, amount: Int) {
+        val adjusted = applyDebugAdjustment(_state.value, stat, amount)
+        _state.value = adjusted
+        saveState(adjusted)
     }
 
 }

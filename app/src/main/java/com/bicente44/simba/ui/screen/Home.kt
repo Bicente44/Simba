@@ -82,7 +82,7 @@ fun Home(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = HomeStrings.ageLabel(age, settingsState.language))
+            Text(text = HomeStrings.ageLabel(age, settingsState.language), color = Color.White)
 
             if (isDead(state)) {
                 Button(

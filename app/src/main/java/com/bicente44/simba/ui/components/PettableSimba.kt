@@ -125,7 +125,7 @@ private fun SparkleParticle(position: Offset, onFinished: () -> Unit) {
 fun simbaPainterFor(activity: ActivityState, mood: Mood, isDead: Boolean): Painter {
     if (isDead) return painterResource(R.drawable.simba_heaven)
     return when (activity) {
-        ActivityState.PETTING -> painterResource(R.drawable.simba_crazy) //TODO: Get a better petting photo
+        ActivityState.PETTING -> painterResource(R.drawable.simba_petting)
         ActivityState.IDLE -> when (mood) {
             Mood.HAPPY -> painterResource(R.drawable.simba_curious_happy)
             Mood.SAD -> painterResource(R.drawable.simba_sad)
@@ -135,7 +135,7 @@ fun simbaPainterFor(activity: ActivityState, mood: Mood, isDead: Boolean): Paint
             Mood.NEUTRAL -> painterResource(R.drawable.simba_idle)
         }
         ActivityState.EATING -> painterResource(R.drawable.simba_eating)
-        ActivityState.PLAYING -> painterResource(R.drawable.simba_silly) // TODO: Get a better playing Simba photo
+        ActivityState.PLAYING -> painterResource(R.drawable.simba_silly)
         ActivityState.SLEEPING -> painterResource(R.drawable.simba_sleep)
         ActivityState.GROOMING -> painterResource(R.drawable.simba_grooming)
     }

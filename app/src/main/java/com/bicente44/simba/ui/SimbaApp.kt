@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bicente44.simba.ui.screen.Credits
+import com.bicente44.simba.ui.screen.Debug
 import com.bicente44.simba.ui.screen.Extra
 import com.bicente44.simba.ui.screen.Gallery
 import com.bicente44.simba.viewmodel.SimbaViewModel
@@ -30,7 +31,7 @@ fun SimbaApp(modifier: Modifier = Modifier) {
     fun goBack() {
         currentScreen = when (currentScreen) {
             Screen.EXTRAS -> Screen.SETTINGS
-            Screen.CREDITS, Screen.INTRO, Screen.GALLERY -> Screen.EXTRAS
+            Screen.CREDITS, Screen.INTRO, Screen.GALLERY, Screen.DEBUG -> Screen.EXTRAS
             else -> Screen.HOME
         }
     }
@@ -59,7 +60,8 @@ fun SimbaApp(modifier: Modifier = Modifier) {
                 onDismissAll = ::dismissAll,
                 onCreditsClicked = { currentScreen = Screen.CREDITS },
                 onRewatchIntroClicked = { currentScreen = Screen.INTRO },
-                onGalleryClicked = { currentScreen = Screen.GALLERY}
+                onGalleryClicked = { currentScreen = Screen.GALLERY},
+                onDebugClicked = { currentScreen = Screen.DEBUG}
                 )
             Screen.GALLERY -> Gallery(
                 viewModel = viewModel,
@@ -69,6 +71,11 @@ fun SimbaApp(modifier: Modifier = Modifier) {
             Screen.INTRO -> IntroCutscene(
                 viewModel = viewModel,
                 onFinished = { currentScreen = Screen.HOME },
+            )
+            Screen.DEBUG -> Debug(
+                viewModel = viewModel,
+                onBack = ::goBack,
+                onDismissAll = ::dismissAll,
             )
             else -> {}
         }
