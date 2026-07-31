@@ -15,7 +15,6 @@ Will run on android but IOS compatability in mind for the future.
  - [ ] Debug mode (requires code, this gives +- button for stats) (future)
  - [ ] Bundle game icon selection options to choose from (future)
  - [ ] Simba talking/text bubble
- - [x] * Add ability to pet Simba (Visual FX like sparkles, raises happiness)
 ### Assets
  - [ ] Remake action icons
    - [ ] Food
@@ -23,5 +22,5 @@ Will run on android but IOS compatability in mind for the future.
    - [ ] Sleep
    - [ ] Clean
  ### Fixes
- - [ ] * Load/Saving bug for Simba default stat change (This is a Simba state version issue)
+ - [x] * Load/Saving bug for Simba default stat change (This is a Simba state version issue)
    Version ID, load default data on missing fields, remove data on extra fields.

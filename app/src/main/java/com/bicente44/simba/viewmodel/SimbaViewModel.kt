@@ -41,6 +41,8 @@ class SimbaViewModel () : ViewModel() {
     val state: StateFlow<SimbaState> = _state.asStateFlow()
     val settingsState: StateFlow<SettingsState> = _settingsState.asStateFlow()
 
+    private val json = Json { ignoreUnknownKeys = true }
+
     /**
      * Initialize on app launch. Applies state. Also starts decay timed thread.
      */
@@ -83,13 +85,13 @@ class SimbaViewModel () : ViewModel() {
         return if (save == null) {
             SimbaDefaults.newSimba(System.currentTimeMillis())
         } else {
-            Json.decodeFromString<SimbaState>(save)
+            json.decodeFromString<SimbaState>(save)
         }
     }
 
     private fun saveState(newState: SimbaState) {
         // encode to JSON, write to settings
-        settings.putString("simba_save", Json.encodeToString(newState))
+        settings.putString("simba_save", json.encodeToString(newState))
     }
 
     fun onRestartSimba() {
@@ -180,12 +182,12 @@ class SimbaViewModel () : ViewModel() {
         return if (save == null) {
             SimbaDefaults.defaultSettings()
         } else {
-            Json.decodeFromString<SettingsState>(save)
+            json.decodeFromString<SettingsState>(save)
         }
     }
 
     private fun saveSettings(newSettings: SettingsState) {
-        settings.putString("simba_settings", Json.encodeToString(newSettings))
+        settings.putString("simba_settings", json.encodeToString(newSettings))
     }
 
     fun onMusicVolumeChanged(volume: Float) {
