@@ -38,7 +38,9 @@ import com.bicente44.simba.model.internationalization.HomeStringKey
 import com.bicente44.simba.model.internationalization.HomeStrings
 import com.bicente44.simba.model.isDead
 import com.bicente44.simba.ui.components.PettableSimba
+import com.bicente44.simba.ui.components.SpeechBubble
 import com.bicente44.simba.ui.components.StatButton
+import com.bicente44.simba.ui.components.speechFor
 import kotlinx.coroutines.delay
 
 @Composable
@@ -98,82 +100,106 @@ fun Home(
             }
         }
 
-        // Simba
-        PettableSimba(
-            activityState = state.activityState,
-            mood = mood,
-            isDead = isDead(state),
-            onPetTick = viewModel::onPetTick,
-            onPetEnded = viewModel::onPetEnded,
-            modifier = Modifier.align(Alignment.Center)
-        )
-
-        // Health + Action buttons
-        Column(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 24.dp)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            // Health bar
-            Box (
+        Column(modifier = Modifier.fillMaxSize()) {
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(24.dp),
-                contentAlignment = Alignment.Center
+                    .padding(16.dp)
+                    .padding(top = 24.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                LinearProgressIndicator(
-                    progress = { state.health / 100f },
-                    modifier = Modifier
-                        .fillMaxWidth(0.6f)
-                        .height(24.dp),
-                    color = Color(0xFFFFA332)
-                )
-                Text(
-                    text = "${state.health}%",
-                    color = Color.Black
-                )
+                // unchanged: age text, restart button, settings icon
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .padding(bottom = 5.dp),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    if (!isDead(state)) {
+                        SpeechBubble(
+                            text = speechFor(state.activityState, mood, settingsState.language),
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                    }
+                    PettableSimba(
+                        activityState = state.activityState,
+                        mood = mood,
+                        isDead = isDead(state),
+                        onPetTick = viewModel::onPetTick,
+                        onPetEnded = viewModel::onPetEnded
+                    )
+                }
             }
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.padding(12.dp),
+            Column(
+                modifier = Modifier
+                    .padding(bottom = 24.dp)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                StatButton(
-                    icon = painterResource(R.drawable.icon_cat_food),
-                    statValue = state.hunger,
-                    color = Color(0xFFfa8072),
-                    onClick = { viewModel.onFeedClicked(15, 15, 7) },
-                    enabled = state.feedCooldown.canUse(now) && canPerformAnyAction(state, now) && !isDead(state)
-                )
-                StatButton(
-                    icon = painterResource(R.drawable.icon_play),
-                    statValue = state.happiness,
-                    color = Color(0xFFfed88f),
-                    onClick = { viewModel.onPlayClicked(15, 7) },
-                    enabled = state.playCooldown.canUse(now) && canPerformAnyAction(state, now) && !isDead(state)
-                )
-            }
-            Row(horizontalArrangement = Arrangement.SpaceEvenly) {
-                StatButton(
-                    icon = painterResource(R.drawable.icon_sleep),
-                    statValue = state.energy,
-                    color = Color(0xFFc4a9f9),
-                    onClick = { viewModel.onSleepClicked(15, 5, 5) },
-                    enabled = state.sleepCooldown.canUse(now) && canPerformAnyAction(state, now) && !isDead(state)
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                StatButton(
-                    icon = painterResource(R.drawable.icon_groom),
-                    statValue = state.cleanliness,
-                    color = Color(0xFFd7f6f9),
-                    onClick = { viewModel.onCleanClicked(3) },
-                    enabled = canPerformAnyAction(state, now) && !isDead(state)
-                )
+                Box (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(24.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    LinearProgressIndicator(
+                        progress = { state.health / 100f },
+                        modifier = Modifier
+                            .fillMaxWidth(0.6f)
+                            .height(24.dp),
+                        color = Color(0xFFFFA332)
+                    )
+                    Text(
+                        text = "${state.health}%",
+                        color = Color.Black
+                    )
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.padding(12.dp),
+                ) {
+                    StatButton(
+                        icon = painterResource(R.drawable.icon_cat_food),
+                        statValue = state.hunger,
+                        color = Color(0xFFfa8072),
+                        onClick = { viewModel.onFeedClicked(15, 15, 7) },
+                        enabled = state.feedCooldown.canUse(now) && canPerformAnyAction(state, now) && !isDead(state)
+                    )
+                    StatButton(
+                        icon = painterResource(R.drawable.icon_play),
+                        statValue = state.happiness,
+                        color = Color(0xFFfed88f),
+                        onClick = { viewModel.onPlayClicked(15, 7) },
+                        enabled = state.playCooldown.canUse(now) && canPerformAnyAction(state, now) && !isDead(state)
+                    )
+                }
+                Row(horizontalArrangement = Arrangement.SpaceEvenly) {
+                    StatButton(
+                        icon = painterResource(R.drawable.icon_sleep),
+                        statValue = state.energy,
+                        color = Color(0xFFc4a9f9),
+                        onClick = { viewModel.onSleepClicked(15, 5, 5) },
+                        enabled = state.sleepCooldown.canUse(now) && canPerformAnyAction(state, now) && !isDead(state)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    StatButton(
+                        icon = painterResource(R.drawable.icon_groom),
+                        statValue = state.cleanliness,
+                        color = Color(0xFFd7f6f9),
+                        onClick = { viewModel.onCleanClicked(3) },
+                        enabled = canPerformAnyAction(state, now) && !isDead(state)
+                    )
+                }
             }
         }
     }
 }
+
 

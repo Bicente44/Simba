@@ -14,7 +14,7 @@ Will run on android but IOS compatability in mind for the future.
  - [ ] Cleanup entire UI
  - [ ] Debug mode (requires code, this gives +- button for stats) (future)
  - [ ] Bundle game icon selection options to choose from (future)
- - [ ] Simba talking/text bubble
+ - [x] Simba talking/text bubble
 ### Assets
  - [ ] Remake action icons
    - [ ] Food

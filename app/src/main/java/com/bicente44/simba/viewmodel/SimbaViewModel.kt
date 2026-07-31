@@ -28,7 +28,10 @@ import kotlinx.serialization.json.Json
  * A ViewModel for the Simba app, currently handles business coordination + persistence calls.
  */
 class SimbaViewModel () : ViewModel() {
+
     private val settings: Settings = Settings()
+
+    private val json = Json { ignoreUnknownKeys = true }
 
     /**
      * Mutable state, when ViewModel does an action that modifies the state.
@@ -40,8 +43,6 @@ class SimbaViewModel () : ViewModel() {
      */
     val state: StateFlow<SimbaState> = _state.asStateFlow()
     val settingsState: StateFlow<SettingsState> = _settingsState.asStateFlow()
-
-    private val json = Json { ignoreUnknownKeys = true }
 
     /**
      * Initialize on app launch. Applies state. Also starts decay timed thread.
