@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.bicente44.simba.model.displayName
 import com.bicente44.simba.model.internationalization.SettingsStringKey
 import com.bicente44.simba.model.internationalization.SettingsStrings
 
@@ -62,21 +63,21 @@ fun Settings(
 
         Box {
             Button(onClick = { languageMenuExpanded = true }) {
-                Text(settingsState.language.name)
+                Text(settingsState.language.displayName)
             }
             DropdownMenu(
                 expanded = languageMenuExpanded,
                 onDismissRequest = { languageMenuExpanded = false }
             ) {
                 DropdownMenuItem(
-                    text = { Text("English") },
+                    text = { Text(Language.ENGLISH.displayName) },
                     onClick = {
                         viewModel.onLanguageChanged(Language.ENGLISH)
                         languageMenuExpanded = false
                     }
                 )
                 DropdownMenuItem(
-                    text = { Text("Français") },
+                    text = { Text(Language.FRENCH.displayName) },
                     onClick = {
                         viewModel.onLanguageChanged(Language.FRENCH)
                         languageMenuExpanded = false

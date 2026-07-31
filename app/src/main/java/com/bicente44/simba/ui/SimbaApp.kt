@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bicente44.simba.ui.screen.Credits
 import com.bicente44.simba.ui.screen.Extra
+import com.bicente44.simba.ui.screen.Gallery
 import com.bicente44.simba.viewmodel.SimbaViewModel
 import com.bicente44.simba.ui.screen.Home
 import com.bicente44.simba.ui.screen.IntroCutscene
@@ -23,15 +24,13 @@ fun SimbaApp(modifier: Modifier = Modifier) {
     val state by viewModel.state.collectAsState()
 
     var currentScreen by remember {
-        //mutableStateOf(if (state.hasSeenIntro) Screen.HOME else Screen.INTRO)
-        mutableStateOf(Screen.HOME) // TODO: revert to hasSeenIntro check once Intro is built
+        mutableStateOf(if (state.hasSeenIntro) Screen.HOME else Screen.INTRO)
     }
 
     fun goBack() {
         currentScreen = when (currentScreen) {
             Screen.EXTRAS -> Screen.SETTINGS
             Screen.CREDITS, Screen.INTRO, Screen.GALLERY -> Screen.EXTRAS
-            // TODO Check first launch, once we add it, it will probably break
             else -> Screen.HOME
         }
     }
@@ -60,7 +59,13 @@ fun SimbaApp(modifier: Modifier = Modifier) {
                 onDismissAll = ::dismissAll,
                 onCreditsClicked = { currentScreen = Screen.CREDITS },
                 onRewatchIntroClicked = { currentScreen = Screen.INTRO },
+                onGalleryClicked = { currentScreen = Screen.GALLERY}
                 )
+            Screen.GALLERY -> Gallery(
+                viewModel = viewModel,
+                onBack = ::goBack,
+                onDismissAll = ::dismissAll,
+            )
             Screen.INTRO -> IntroCutscene(
                 viewModel = viewModel,
                 onFinished = { currentScreen = Screen.HOME },

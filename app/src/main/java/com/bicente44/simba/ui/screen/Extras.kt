@@ -17,6 +17,7 @@ fun Extra(
     onDismissAll: () -> Unit,
     onCreditsClicked: () -> Unit,
     onRewatchIntroClicked: () -> Unit,
+    onGalleryClicked: () -> Unit,
     ) {
 
     val settingsState by viewModel.settingsState.collectAsState()
@@ -25,5 +26,6 @@ fun Extra(
 
         Button(onClick = onCreditsClicked) { Text(text = ExtraStrings.get(ExtraStringKey.CREDITS_BUTTON, settingsState.language)) }
         Button(onClick = onRewatchIntroClicked) { Text(text = ExtraStrings.get(ExtraStringKey.REWATCH_INTRO_BUTTON, settingsState.language)) }
+        Button(onClick = onGalleryClicked) { Text(text = ExtraStrings.get(ExtraStringKey.GALLERY_BUTTON, settingsState.language)) }
     }
 }

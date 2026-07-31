@@ -19,3 +19,9 @@ data class SettingsState(
 enum class Language {
     ENGLISH, FRENCH
 }
+
+val Language.displayName: String
+    get() = when (this) {
+        Language.ENGLISH -> "English"
+        Language.FRENCH -> "Français"
+    }
